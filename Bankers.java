@@ -74,6 +74,144 @@ public class Bankers{
        new Bankers().isSafe();
     }
 }
+// ---------------------------------------------------------------
+// ---------------- BANKER'S ALGORITHM - FULL EXPLANATION --------
+// ---------------------------------------------------------------
+//
+// np = number of processes in the system
+// nr = number of resource types available for allocation
+//
+// We use four main matrices:
+//
+// 1) allocate[np][nr]
+//    - allocate[i][j] = number of instances of resource j
+//      currently allocated to process i
+//
+// 2) max[np][nr]
+//    - max[i][j] = maximum demand of process i
+//      for resource j during its execution
+//
+// 3) need[np][nr]
+//    - need[i][j] = max[i][j] - allocate[i][j]
+//    - tells how many more resources process i must receive
+//      before it can finish
+//
+// 4) avail[1][nr]
+//    - avail[0][j] = number of free instances of resource j
+//    - these can be allocated to any process
+//
+// ---------------------------------------------------------------
+// ---------------------- INPUT PHASE ----------------------------
+// ---------------------------------------------------------------
+// User enters:
+// - np (no. of processes)
+// - nr (no. of resources)
+// - allocation matrix
+// - maximum matrix
+// - available matrix
+//
+// All matrices are stored and used for safety checking.
+//
+// ---------------------------------------------------------------
+// ------------------ NEED MATRIX CALCULATION --------------------
+// ---------------------------------------------------------------
+// For every process i and resource j:
+// need[i][j] = max[i][j] - allocate[i][j]
+//
+// This shows how many additional resources each process needs
+// to complete its execution.
+//
+// ---------------------------------------------------------------
+// ------------------ CHECK() FUNCTION ---------------------------
+// ---------------------------------------------------------------
+// check(i) verifies if process i can be executed safely:
+//
+// For every resource j:
+//    if (avail[0][j] < need[i][j]) → process i cannot run now
+//
+// If all needed resources are available, process i is safe to execute.
+//
+// check(i) returns:
+// - true  → process i can run
+// - false → process i cannot run yet
+//
+// ---------------------------------------------------------------
+// ------------------ SAFETY ALGORITHM (isSafe) ------------------
+// ---------------------------------------------------------------
+// Goal: Determine whether the system is in a SAFE or UNSAFE state.
+//
+// Logic:
+// 1) Mark all processes as "not done"
+// 2) Repeatedly try to allocate a process that:
+//       (not done) AND (check(i) == true)
+//
+// 3) If process i can be allocated:
+//       - It runs and completes
+//       - It releases all its resources back to the system
+//
+//    This is done by the formula:
+//       avail = avail - need + max
+//
+//    This effectively means:
+//       avail = avail + allocate
+//
+//    Because finishing a process returns all allocated resources.
+//
+// 4) Mark process i as "done"
+// 5) Count how many processes finished
+//
+// If at least one process is allocated in a cycle,
+// the algorithm continues.
+//
+// If in any cycle *no* process can be allocated,
+// the system is UNSAFE and may go into deadlock.
+//
+// ---------------------------------------------------------------
+// ------------------------- SAFE STATE ---------------------------
+// ---------------------------------------------------------------
+// If all np processes become done (completed),
+// the system is in a SAFE state.
+//
+// SAFE STATE:
+//   - All processes can complete
+//   - No deadlock will occur
+//
+// UNSAFE STATE:
+//   - There exists at least one process whose needs
+//     can never be satisfied with current resources
+//   - Risk of deadlock is present
+//
+// ---------------------------------------------------------------
+// ------------------ OUTPUT OF THE ALGORITHM --------------------
+// ---------------------------------------------------------------
+// While running, algorithm prints each process that is allocated:
+//     "Allocated process : i"
+//
+// After all successful allocations:
+//     "Safely allocated"
+//
+// If some processes cannot be completed:
+//     "All processes can't be allocated safely"
+//
+// ---------------------------------------------------------------
+// ---------------------- SUMMARY --------------------------------
+// ---------------------------------------------------------------
+// The Banker's Algorithm checks if resource allocation is safe.
+// It prevents deadlock by ensuring that processes receive resources
+// only if they can eventually complete and release them.
+// It uses four main matrices:
+//   allocate, max, need, and avail
+//
+// np = number of processes
+// nr = number of resource types
+//
+// Safety check proceeds by simulating execution without actually
+// allocating resources permanently.
+//
+// ---------------------------------------------------------------
+// ---------------- END OF EXPLANATION ---------------------------
+// ---------------------------------------------------------------
+
 --------------------------------------------------------------------------------------------------------------------------
 Output
 --------------------------------------------------------------------------------------------------------------------------
